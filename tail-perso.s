@@ -1,5 +1,6 @@
 # Queue 
 	.eqv PrintString 	4 
+	.eqv PrintChar		11
 	.eqv ReadChar  		12
 	.eqv Exit 		10
 	.eqv BufSize		20
@@ -39,3 +40,27 @@ fin_read :
 #	mv a0, s0
 #	ecall
 # marche pas -> donne  "adipiscing elitetur "
+	# s1 + s0 -> premier element 
+	# s1 -> indique ou s'arreter
+	
+	mv s2, s1  # -> s2 contient une copie de s1 qu'on
+		   # va modifier avec le temps
+print : 
+	mv a0, s0
+	add a0, a0, s2 
+	
+	lbu a0, 0(a0)
+	
+	li a7, PrintChar
+	ecall 
+	
+	addi s2, s2, 1
+	li t0, BufSize 
+	rem s2, s2, t0 
+	
+	beq s2, s1, fin_print
+	j print 
+fin_print : 
+
+	li a7, Exit 
+	ecall 
